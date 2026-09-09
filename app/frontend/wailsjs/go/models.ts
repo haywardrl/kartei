@@ -268,6 +268,7 @@ export namespace slipbox {
 	    label: string;
 	    title: string;
 	    root: string;
+	    roots: number;
 	    part: number;
 	    parts: number;
 	    first: string;
@@ -287,6 +288,7 @@ export namespace slipbox {
 	        this.label = source["label"];
 	        this.title = source["title"];
 	        this.root = source["root"];
+	        this.roots = source["roots"];
 	        this.part = source["part"];
 	        this.parts = source["parts"];
 	        this.first = source["first"];
