@@ -3,7 +3,7 @@
 import { Room, BOARD } from './room.js';
 import { Panel, esc, mini, addrChip, renderBody } from './panel.js';
 import { sound } from './sound.js';
-import { DESK_SPACE } from './art.js';
+import { DESK_SPACE, BOX_DRAWERS } from './art.js';
 import { api } from './api.js';
 
 class App {
@@ -32,7 +32,6 @@ class App {
     const filed = this.model.notes.filter((n) => n.filed).length;
     const hud = document.getElementById('hud-status');
     hud.textContent = `${filed} in the box · ${this.model.unfiled.length} on the desk · ${this.model.root.split('/').pop()}`; hud.title = this.model.root;
-    if (this.model.warnings.length && !this.warned) { this.warned = true; this.toast(`${this.model.warnings.length} warning${this.model.warnings.length === 1 ? '' : 's'} while reading the box (broken links, cycles). Nothing was changed.`); }
     return this.model;
   }
 
@@ -85,9 +84,7 @@ class App {
     const { page, pages } = this.room.nextPage(box);
     if (pages <= 1) { this.openDrawers(); return; }
     sound.drawer(); this.room.closeDrawer();
-    const count = (box === 'main' ? this.room.mainDrawers : this.room.litDrawers).length;
-    const first = page * 6 + 1, last = Math.min(first + 5, count);
-    this.toast(`${box === 'main' ? 'Slip box' : 'Literature box'} ${page + 1} of ${pages}: drawers ${first} to ${last}`, 'ok');
+    this.tooltip(this.room.objects().find((o) => o.kind === (box === 'main' ? 'slipbox' : 'litbox')));
   }
   openDrawers() {
     this.room.highlight = 'slipbox'; this.room.panToObject('slipbox'); this.room.closeDrawer();
@@ -157,7 +154,7 @@ class App {
       else n = await api.newNote(title, body, parent || '');
       sound.save();
       await this.load();
-      this.toast(id ? 'Card updated' : parent ? `Filed behind ${esc(this.byId.get(parent)?.address || '')} as ${n.address}` : 'On the desk. File it when you know where it belongs.', 'ok');
+      if (!id) this.toast(parent ? `Filed behind ${esc(this.byId.get(parent)?.address || '')} as ${n.address}` : 'On the desk. File it when you know where it belongs.', 'ok');
       this.openCard(n.id);
     } catch (e) {
       if (e.status === 409 && e.data?.conflict) { this.conflict({ id, title, body, seen }, e.data.disk); return; }
@@ -172,7 +169,7 @@ class App {
       <h3 style="font:600 11px var(--mono);color:var(--ink-2);text-transform:uppercase">Yours, unsaved</h3><pre>${esc(mine.body)}</pre>
       <div class="actions"><button class="primary" data-c="mine">Keep mine</button><button data-c="theirs">Keep the disk version</button><button data-c="both">Keep both</button></div></div>`);
     this.overlay.querySelector('[data-c="mine"]').onclick = () => { this.closeOverlay(); this.saveCard(mine, true); };
-    this.overlay.querySelector('[data-c="theirs"]').onclick = async () => { this.closeOverlay(); await this.load(); this.openCard(mine.id); this.toast('Kept the disk version', 'ok'); };
+    this.overlay.querySelector('[data-c="theirs"]').onclick = async () => { this.closeOverlay(); await this.load(); this.openCard(mine.id); };
     this.overlay.querySelector('[data-c="both"]').onclick = async () => {
       this.closeOverlay();
       try { await api.newNote(mine.title + ' (my version)', mine.body, ''); await this.load(); this.openCard(mine.id); this.toast('Kept the disk version; yours is a new card on the desk', 'ok'); } catch (e) { this.toast(e.message); }
@@ -211,7 +208,7 @@ class App {
     const terms = this.model.register.map((e) => e.term);
     const term = await this.ask({ title: 'Enter in the register', text: 'Under which term, in your own words?', placeholder: 'term', suggestions: terms, ok: 'Enter' });
     if (!term) return;
-    try { await api.registerAdd(term, id); sound.paper(); await this.load(); this.panel.refresh(); this.toast(`In the register under "${esc(term)}"`, 'ok'); } catch (e) { this.toast(e.message); }
+    try { await api.registerAdd(term, id); sound.paper(); await this.load(); this.panel.refresh(); } catch (e) { this.toast(e.message); }
   }
   async registerAddTerm(term) {
     try { await api.registerAdd(term); await this.load(); this.panel.refresh(); } catch (e) { this.toast(e.message); }
@@ -367,7 +364,7 @@ class App {
     const b = this.model.boards.find((x) => x.id === bid);
     const n = b.cards.length;
     const x = 40 + (n % 4) * 280 + (n * 13) % 30, y = 40 + Math.floor(n / 4) * 240 % (BOARD.h - 120);
-    try { await api.pin(bid, id, x, y); sound.pin(); await this.load(); this.activeBoard = bid; this.room.setModel(this.model, bid); this.panel.refresh(); this.toast(`Pinned to ${b.name}. It stays in its drawer.`, 'ok'); }
+    try { await api.pin(bid, id, x, y); sound.pin(); await this.load(); this.activeBoard = bid; this.room.setModel(this.model, bid); this.panel.refresh(); }
     catch (e) { this.toast(e.message); }
   }
   async movePin(bid, id, x, y) { try { await api.pin(bid, id, x, y); sound.pin(); await this.load(); this.room.setModel(this.model, bid); } catch (e) { this.toast(e.message); } }
@@ -426,7 +423,7 @@ class App {
   }
   help() {
     this.sheet(`<h2>The study</h2>
-      <p><b>The desk</b> is the inbox: a card you write from the pad, or in any other editor, lies there with no address. <b>Filing</b> puts it in the box: choose the card it sits <i>behind</i> (a branch off it) or <i>after</i> (next in its line). That decision gives it an address like 2b1 and a drawer, and clears it from the desk. <b>Drawers</b> are one per branch; click one to open it. <b>Links</b> in the text say what a card mentions, filing says where it grew from. The <b>ledger</b> is your register: a term, then the drawers where it lives. The <b>corkboard</b> pins references for a project.</p>
+      <p><b>The desk</b> is the inbox: a card you write from the pad, or in any other editor, lies there with no address. <b>Filing</b> puts it in the box: choose the card it sits <i>behind</i> (a branch off it) or <i>after</i> (next in its line). That decision gives it an address like 2b1 and a drawer, and clears it from the desk. <b>Drawers</b> fill in address order, a whole branch at a time; click one to open it. <b>Links</b> in the text say what a card mentions, filing says where it grew from. The <b>ledger</b> is your register: a term, then the drawers where it lives. The <b>corkboard</b> pins references for a project.</p>
       <table>
         <tr><td><kbd>/</kbd></td><td>search</td><td><kbd>n</kbd></td><td>new card</td></tr>
         <tr><td><kbd>s</kbd></td><td>slip box</td><td><kbd>b</kbd></td><td>corkboard</td></tr>
@@ -442,7 +439,7 @@ class App {
     const host = document.getElementById('toasts');
     while (host.children.length >= 3) host.firstChild.remove();
     host.appendChild(t);
-    setTimeout(() => t.remove(), 3600);
+    setTimeout(() => t.remove(), 2800);
   }
 
   // --- prefs ---

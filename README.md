@@ -8,8 +8,6 @@ editable in any other tool, and the room updates as you save.
 
 ![The study by day: corkboard, desk with the inbox tray, two slip boxes](docs/screenshots/room.png)
 
-![The same room at night, lit by the lamp](docs/screenshots/room-night.png)
-
 `SPEC.md` is the current design. `docs/UI-GUIDE.md` is the contract for
 anyone building another front end on the engine.
 
@@ -101,7 +99,7 @@ lies here with a red tab. "Put it away" hides it until tomorrow.
 
 | Object | What it does |
 |---|---|
-| Slip box | Six numbered drawers to a box. Past six the archive is more boxes: click the box to turn to the next; pips on the lid say which one is showing. Click a drawer to open it. |
+| Slip box | Eight numbered drawers to a box. Past eight the archive is more boxes: click the box to turn to the next; pips on the lid say which one is showing. Click a drawer to open it. |
 | Literature box | The green box beside it, for sources (`L1`) and their excerpts (`L1a`). Works the same way. |
 | Inbox tray | The unfiled cards as one stack. Red tab: a card slipped out today. Orange pip: past twelve. Click for the desk view. |
 | Blank cards | A new card. |
@@ -145,8 +143,9 @@ If you have never kept a slip box, this is the idea in six points.
 3. **Filing is not linking.** The tree says where a card *grew from*. A
    `[[link]]` in the text says what it *mentions*, anywhere in either box.
    Links are written by ID, so they survive renames and refiling.
-4. **Drawers.** One per branch, numbered on the front. A branch that outgrows
-   its drawer spills into the next. The contents are also written to
+4. **Drawers.** Filled in address order a whole branch at a time, numbered on
+   the front. Small branches share a drawer; a branch that outgrows its drawer
+   spills into the next. A drawer is a stretch of the sequence, not a topic. The contents are also written to
    `_index.md` in the vault, so the structure is readable in any editor and can
    be rebuilt from it if the sidecar is ever lost.
 5. **Two boxes.** Luhmann kept a separate bibliographic box. The green one is

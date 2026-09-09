@@ -17,7 +17,7 @@
 //     structure stored; everything else is derived.
 //   - An address (1b3, or L2a in the literature box) is derived from the tree
 //     at load time and never written anywhere but _index.md.
-//   - A drawer is a physical chunk of a box: one per root branch by default,
+//   - A drawer is a physical chunk of a box: filled a whole branch at a time by default,
 //     or equal chunks of the address sequence under the address-range rule.
 //   - Links are [[wikilinks]] in the body, written by the user, resolved by
 //     ID, slug, title or address. They cross boxes freely.

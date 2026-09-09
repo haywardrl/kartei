@@ -5,25 +5,26 @@ import (
 	"testing"
 )
 
-func TestDrawersAreBranches(t *testing.T) {
+func TestDrawersPackWholeBranches(t *testing.T) {
 	v := openFixture(t, "fixture-small")
+	// three small branches (5, 4 and 3 cards) share one drawer at the default size
 	ds := v.Drawers()
-	if len(ds) != 3 {
-		t.Fatalf("expected one drawer per branch, got %d: %+v", len(ds), ds)
+	if len(ds) != 1 || ds[0].Label != "1 · Systems fail under load + 2 more" || ds[0].Roots != 3 || ds[0].First != "1" || ds[0].Last != "3b" || len(ds[0].IDs) != 12 {
+		t.Fatalf("packed drawer: %+v", ds)
 	}
-	if ds[0].Label != "1 · Systems fail under load" || ds[1].Label != "2 · Luhmann on selection" || ds[2].Label != "3 · Notes on redundancy" {
-		t.Fatalf("labels: %q %q %q", ds[0].Label, ds[1].Label, ds[2].Label)
-	}
-	if ds[0].Number != 1 || ds[0].Root != "20240101T100000" || ds[0].First != "1" || ds[0].Last != "1b2" {
-		t.Fatalf("drawer 1: %+v", ds[0])
-	}
-	if !reflect.DeepEqual(ds[0].IDs, []ID{"20240101T100000", "20240105T100000", "20240102T100000", "20240103T100000", "20240104T100000"}) {
+	if ds[0].Root != "20240101T100000" || !reflect.DeepEqual(ds[0].IDs[:5], []ID{"20240101T100000", "20240105T100000", "20240102T100000", "20240103T100000", "20240104T100000"}) {
 		t.Fatalf("drawer 1 order = %v", ds[0].IDs)
 	}
-	// a branch that outgrows a drawer spills into a second part
+	// a drawer of five: the first branch fills it, the next two share the second
+	v.SetSettings(Settings{DrawerRule: RuleBranch, DrawerSize: 5})
+	ds = v.Drawers()
+	if len(ds) != 3 || ds[0].Label != "1 · Systems fail under load" || ds[1].Label != "2 · Luhmann on selection" || ds[2].Label != "3 · Notes on redundancy" {
+		t.Fatalf("size 5: %+v", ds)
+	}
+	// a branch that outgrows a drawer spills into parts, never straddling another branch
 	v.SetSettings(Settings{DrawerRule: RuleBranch, DrawerSize: 3})
 	ds = v.Drawers()
-	if len(ds) != 5 || ds[0].Parts != 2 || ds[1].Part != 2 || ds[1].Label != "2 · Systems fail under load (2 of 2)" || ds[2].Label != "3 · Luhmann on selection (1 of 2)" {
+	if len(ds) != 5 || ds[0].Parts != 2 || ds[1].Part != 2 || ds[1].Label != "2 · Systems fail under load (2 of 2)" || ds[2].Label != "3 · Luhmann on selection (1 of 2)" || ds[4].Label != "5 · Notes on redundancy" {
 		t.Fatalf("spill: %+v", ds)
 	}
 	for _, d := range ds {

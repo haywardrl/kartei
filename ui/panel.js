@@ -92,11 +92,12 @@ export class Panel {
     const last = m.prefs?.lastDrawer;
     return `<div class="panel-top"><h2>Contents</h2>${this.close()}</div>
       <div class="meta">${total} cards filed · ${m.drawers.length} drawer${m.drawers.length === 1 ? '' : 's'} · ${m.settings.drawerSize} cards per drawer</div>
+      ${m.warnings.length ? `<div class="meta">${m.warnings.length} warning${m.warnings.length === 1 ? '' : 's'} while reading the box (broken links, cycles). Nothing was changed.</div>` : ''}
       ${m.incomplete ? '<div class="warn">This folder looks incomplete (many placed cards are missing). Nothing will be rewritten until it looks whole again.</div>' : ''}
       ${m.unfiled.length ? `<div class="banner">${m.unfiled.length} card${m.unfiled.length === 1 ? ' is' : 's are'} on the desk, not yet in the box. <a class="wl" data-act="desk">See them</a>.</div>` : ''}
       ${m.boxes.map((b) => { const ds = m.drawers.filter((d) => d.box === b.id && !d.unsorted); return `<div class="boxhead">${esc(b.name)}${b.prefix ? ` · addresses ${esc(b.prefix)}1, ${esc(b.prefix)}1a…` : ''}</div>` + (ds.map((d) => `<div class="drawer-front" data-drawer="${d.index}"><span class="label">${esc(d.label)}</span><span class="count">${d.ids.length} card${d.ids.length === 1 ? '' : 's'}${last === d.index ? ' · last opened' : ''}</span></div>`).join('') || '<p class="empty">Empty. File a card as a new branch here to start it.</p>'); }).join('')}
       ${m.drawers.filter((d) => d.unsorted).map((d) => `<div class="boxhead">Unsorted</div><div class="drawer-front unsorted" data-drawer="${d.index}"><span class="label">${esc(d.label)}</span><span class="count">${d.ids.length} card${d.ids.length === 1 ? '' : 's'}</span></div>`).join('')}
-      <p class="empty" style="margin-top:14px">${m.settings.drawerRule === 'address-range' ? 'Drawers are chunks of one continuous sequence, not topics.' : 'One drawer per branch. A branch that outgrows its drawer spills into the next.'}</p>`;
+      <p class="empty" style="margin-top:14px">${m.settings.drawerRule === 'address-range' ? 'Drawers are chunks of one continuous sequence, not topics.' : 'Drawers fill in address order, a whole branch at a time. Small branches share a drawer; one that outgrows a drawer spills into the next.'}</p>`;
   }
 
   drawer(i) {
@@ -106,7 +107,7 @@ export class Panel {
     const byId = this.app.byId;
     return `${this.crumbs([{ text: 'Slip box', act: 'drawers' }, { text: drawerName(d, m) }])}
       <div class="panel-top"><h2>${esc(d.unsorted ? 'Unsorted' : d.label)}</h2>${this.close()}</div>
-      <div class="meta">${d.ids.length} card${d.ids.length === 1 ? '' : 's'}${d.first ? ` · ${esc(d.first)} to ${esc(d.last)}` : ''}${d.unsorted ? ' · guests and damaged notes live here until adopted' : ''}</div>
+      <div class="meta">${d.ids.length} card${d.ids.length === 1 ? '' : 's'}${d.roots > 1 ? ` · ${d.roots} branches` : ''}${d.first ? ` · ${esc(d.first)} to ${esc(d.last)}` : ''}${d.unsorted ? ' · guests and damaged notes live here until adopted' : ''}</div>
       <div class="fan">${d.ids.map((id) => mini(byId.get(id))).join('') || '<p class="empty">Empty drawer.</p>'}</div>`;
   }
 

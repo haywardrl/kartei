@@ -108,7 +108,7 @@ func seedDemo(dir string) error {
 			{Term: "load", Targets: []slipbox.ID{ids[5], ids[9]}, Note: "systems under stress"},
 			{Term: "Luhmann", Targets: []slipbox.ID{ids[22], ids[23], ids[19]}, Note: ""},
 		},
-		"settings": slipbox.Settings{DrawerRule: slipbox.RuleBranch, DrawerSize: 60, DeskCapacity: 12},
+		"settings": slipbox.Settings{DrawerRule: slipbox.RuleBranch, DrawerSize: 5, DeskCapacity: 12}, // five a drawer, so the demo shows one drawer per branch
 		"prefs":    map[string]any{"lamp": true},
 	}
 	data, err := jsonIndent(st)

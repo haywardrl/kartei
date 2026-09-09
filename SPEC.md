@@ -165,9 +165,11 @@ and still lives in its drawer.
   Siblings by `order`, then ID. Natural sort (`1a9` before `1a10`). Cycles are
   broken by promoting the lowest ID to a root, with a warning. An entry whose
   parent is missing makes the note a root.
-- **Drawers:** `settings.drawerRule` chooses. `branch` (default): one drawer
-  per root branch, in address order, numbered on the front and titled by the
-  root; a branch past `drawerSize` spills into consecutive parts.
+- **Drawers:** `settings.drawerRule` chooses. `branch` (default): drawers fill
+  in address order a whole branch at a time, up to `drawerSize` cards; small
+  branches share a drawer, and a branch bigger than a drawer spills into
+  consecutive parts on its own. Titled by the first root, with "+ n more"
+  when branches share.
   `address-range`: the whole sequence chunked into equal drawers, Luhmann's
   non-topical boxes, for those who want them. Guests and damaged notes go to
   a final Unsorted drawer. Drawer identity is positional and never persisted.
@@ -205,7 +207,7 @@ and still lives in its drawer.
   for 2s, an empty read is never a deletion, a rename that keeps the ID keeps
   every placement. One changed file reparses one file.
 - **Stage** (derived): drawer count 1 → box, 2–3 → double, 4–9 → cabinet, 10+
-  → wall. Informational; the room draws boxes of six drawers instead (§7).
+  → wall. Informational; the room draws boxes of eight drawers instead (§7).
 - **Rediscover** (derived): one card a day, deterministic, chosen from cards
   not on the desk or any board. Empty if fewer than three notes.
 
@@ -261,7 +263,7 @@ pan. Text is never pixel art: the panel is DOM.
 
 | Surface | Meaning | Rules |
 |---|---|---|
-| **Slip box** | The archive | A wooden card-index box with six drawer fronts, two across and three down, standing against the wall right of the desk. Each front carries its drawer number and nothing else; click it and it slides open. Past six drawers the archive is more boxes: click the box body to turn to the next, and pips on the lid say which of how many is showing. Opening a drawer from the panel turns to its box. |
+| **Slip box** | The archive | A wooden card-index box with eight drawer fronts, two across and four down, standing against the wall right of the desk. Each front carries its drawer number and nothing else; click it and it slides open. Past eight drawers the archive is more boxes: click the box body to turn to the next, and pips on the lid say which of how many is showing. Opening a drawer from the panel turns to its box. |
 | **Literature box** | The second box | A green box beside the first, same fronts, same pages. Sources go here as roots (`L1`), excerpts behind them. |
 | **Desk** | The inbox | A tray holding the unfiled cards as one stack (red tab: a card slipped out today; orange pip: past the cap), a stack of blank cards, the register, the lamp. Click the desk or the tray for the top-down view, where the cards are laid out in full; drag them where you like and positions persist. |
 | **Blank cards** | New card | A fresh card lands on the desk unfiled. No address until it is filed. |
@@ -283,7 +285,7 @@ there by a decision about what it relates to.
 
 ### Game loops
 
-1. **Growth.** Past six drawers the slip box becomes a stack of boxes, shown
+1. **Growth.** Past eight drawers the slip box becomes a stack of boxes, shown
    as pips on the lid. Free, because drawers are derived. Later: objects and
    themes unlock by cards filed and days active, never by time spent.
 2. **Rediscovery.** The box surfaces an old card. This is the real value of a
@@ -368,8 +370,9 @@ building this". If a picture of the idea gets shrugs, the app will too.
 - Should writing behind a card also be a two-step (write, then file), for
   consistency with the pad? Current answer: no, pulling the card was the choice.
 - Deferred trust feature, next in line: per-card history with restore.
-- Drawers as branches nudge toward a root per subject. Watch whether users
-  create many roots; the address-range rule is the fallback.
+- Drawers now pack whole branches, so the box count follows card count
+  rather than root count. Watch whether "+ n more" drawers feel like topics
+  or like stretches; the address-range rule is still the fallback.
 - Does pulling a second card replace the first in the panel (current) or lay
   beside it as a trail across the desk?
 - Default `drawerSize` beyond 60. Real use will take months to fill a
@@ -394,5 +397,5 @@ building this". If a picture of the idea gets shrugs, the app will too.
 | **Register** | User-written index of terms to cards |
 | **Guest** | A file in the vault the app did not create |
 | **Damaged** | A note whose frontmatter failed to parse. Shown, never rewritten |
-| **Stage** | The engine's size class for the main box (box, double, cabinet, wall); the room shows boxes of six drawers instead |
+| **Stage** | The engine's size class for the main box (box, double, cabinet, wall); the room shows boxes of eight drawers instead |
 | **Sidecar** | `.kartei/state.json`: all structure, placement and UI traces |

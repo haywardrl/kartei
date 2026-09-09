@@ -93,7 +93,7 @@ What to draw from it:
 
 | Room object | Source |
 |---|---|
-| Slip box and its drawer fronts | `drawers` where `box` is the first of `boxes`; the bundled room shows six per box and pages past that |
+| Slip box and its drawer fronts | `drawers` where `box` is the first of `boxes`; the bundled room shows eight per box and pages past that |
 | Literature box | `drawers` where `box == "lit"` |
 | Number on each drawer | `number`; the `title` belongs in a contents list, not on the front |
 | Size class, if you want one | `stage`: box, double, cabinet, wall, from the main box's drawer count |

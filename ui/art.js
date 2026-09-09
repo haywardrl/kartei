@@ -32,8 +32,8 @@ export const L = {
   lamp:    { x: 318, y: 96,  w: 34,  h: 44 },
   lampGlow: { x: 335, y: 112 },
   ledger:  { x: 294, y: 148, w: 18,  h: 12 },   // the register: your own index of terms
-  boxMain: { x: 380, y: 100, w: 80,  h: 96 },   // the slip box for notes, on the floor against the wall
-  boxLit:  { x: 470, y: 100, w: 80,  h: 96 },   // the slip box for literature, green
+  boxMain: { x: 380, y: 76,  w: 80,  h: 120 },  // the slip box for notes, on the floor against the wall
+  boxLit:  { x: 470, y: 76,  w: 80,  h: 120 },  // the slip box for literature, green
 };
 
 // Desk-card positions are stored in this logical space (the old room desk,
@@ -248,11 +248,11 @@ export function drawDigits(ctx, x, y, text, color) {
 }
 export const digitsWidth = (text) => String(text).length * 4 - 1;
 
-// A slip box: a fixed card-index box with six drawer fronts, two across and
-// three down. Past six drawers the archive is more boxes: page k shows
-// drawers 6k..6k+5, and pips on the lid say which box you are looking at.
+// A slip box: a fixed card-index box with eight drawer fronts, two across and
+// four down. Past eight drawers the archive is more boxes: page k shows the
+// next eight, and pips on the lid say which box you are looking at.
 // Returns the drawer rects so each front is clickable.
-export const BOX_DRAWERS = 6;
+export const BOX_DRAWERS = 8;
 export const boxPages = (n) => Math.max(1, Math.ceil(n / BOX_DRAWERS));
 export function drawSlipbox(ctx, r, drawers, page, openSlot, openAmt, highlight, green) {
   const pages = boxPages(drawers.length);

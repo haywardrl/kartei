@@ -153,7 +153,7 @@ func TestLiteratureBox(t *testing.T) {
 			main++
 		}
 	}
-	if lit != 1 || main != 3 {
+	if lit != 1 || main != 1 { // three small main branches share one drawer
 		t.Fatalf("drawers per box: lit %d main %d", lit, main)
 	}
 	// moving a card from one box to the other renumbers both root lists
