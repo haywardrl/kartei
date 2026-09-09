@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kartei</title>
+<!--token-->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="room" width="480" height="270" aria-label="The study"></canvas>
+  <div id="tooltip" hidden></div>
+  <div id="hud">
+    <button id="btn-sound" title="Sound on/off">sound off</button>
+    <button id="btn-lamp" title="Lamp (l)">lamp</button>
+    <button id="btn-search" title="Search (/)">search</button>
+    <button id="btn-new" title="New root card (n)">new card</button>
+    <button id="btn-help" title="Help (?)">?</button>
+    <span id="hud-status"></span>
+  </div>
+</div>
+<aside id="panel" hidden></aside>
+<div id="overlay" hidden></div>
+<div id="toasts"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

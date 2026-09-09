@@ -1,0 +1,11 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "Kartei",
+  "outputfilename": "Kartei",
+  "assetdir": "../ui",
+  "frontend:install": "",
+  "frontend:build": "",
+  "frontend:dev:watcher": "",
+  "wailsjsdir": "./frontend",
+  "author": { "name": "Kartei" }
+}

@@ -1,0 +1,11 @@
+# build products
+app/build/bin/
+# OS and editor noise
+.DS_Store
+*.swp
+# a local vault, if one is ever created inside the repo
+/Kartei/
+
+# local notes, not part of the release
+docs/post.md
+docs/archive/

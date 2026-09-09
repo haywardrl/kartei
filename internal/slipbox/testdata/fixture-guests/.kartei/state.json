@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "desk": [],
+  "boards": [],
+  "tree": {
+    "20240302T100000": {
+      "parent": "20240301T100000",
+      "order": 1
+    }
+  },
+  "register": [],
+  "settings": {
+    "drawerRule": "address-range",
+    "drawerSize": 60,
+    "deskCapacity": 12
+  }
+}
