@@ -272,14 +272,17 @@ export function drawSlipbox(ctx, r, drawers, page, openSlot, openAmt, highlight,
   }
   const cols = 2, cw = ((r.w - 9) / cols) | 0, rh = 22;
   const rects = [];
+  let open = null; // the open drawer slides over the slot below, so it paints last
   for (let slot = 0; slot < BOX_DRAWERS; slot++) {
     const col = slot % cols, row = (slot / cols) | 0;
     const x = r.x + 3 + col * (cw + 3), y = r.y + 13 + row * (rh + 3);
     const d = drawers[page * BOX_DRAWERS + slot];
     const out = openSlot === slot ? Math.round(openAmt * 14) : 0;
-    drawDrawerFront(ctx, x, y, cw, rh, out, d ? d.number : null);
-    if (d) rects.push({ index: d.index, x, y, w: cw, h: rh });
+    if (out > 0) open = { x, y, out, d };
+    else drawDrawerFront(ctx, x, y, cw, rh, 0, d ? d.number : null);
+    if (d) rects.push({ index: d.index, x, y, w: cw, h: rh + out });
   }
+  if (open) drawDrawerFront(ctx, open.x, open.y, cw, rh, open.out, open.d ? open.d.number : null);
   if (highlight) outline(ctx, r.x - 2, r.y - 2, r.w + 4, r.h + 4, P.yellow);
   return rects;
 }
